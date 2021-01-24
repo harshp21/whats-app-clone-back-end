@@ -139,7 +139,7 @@ io.use(function (socket, next) { return __awaiter(void 0, void 0, void 0, functi
                         return [3 /*break*/, 5];
                     case 5:
                         socket.on('disconnect', function () {
-                            removeUsersFromGroup();
+                            removeUserFromAllGroups();
                         });
                         return [2 /*return*/];
                 }
@@ -173,14 +173,14 @@ io.use(function (socket, next) { return __awaiter(void 0, void 0, void 0, functi
         }
     });
     socket.on('leaveAllGroup', function () {
-        removeUsersFromGroup();
+        removeUserFromAllGroups();
         io.emit('room-users', groupUsers);
     });
     socket.on('disconnect', function () {
-        removeUsersFromGroup();
+        removeUserFromAllGroups();
         io.emit('room-users', groupUsers);
     });
-    var removeUsersFromGroup = function () {
+    var removeUserFromAllGroups = function () {
         users = [];
         groupUsers = groupUsers.map(function (group) {
             var isUser = group.users.some(function (user) { return user.id === socket.decoded.userid; });

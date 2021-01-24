@@ -97,7 +97,7 @@ io.use(async (socket, next: Next) => {
             }
 
             socket.on('disconnect', () => {
-                removeUsersFromGroup();
+                removeUserFromAllGroups();
             })
         })
 
@@ -130,17 +130,17 @@ io.use(async (socket, next: Next) => {
     })
 
     socket.on('leaveAllGroup', () => {
-        removeUsersFromGroup();
+        removeUserFromAllGroups();
         io.emit('room-users', groupUsers);
 
     })
 
     socket.on('disconnect', () => {
-        removeUsersFromGroup();
+        removeUserFromAllGroups();
         io.emit('room-users', groupUsers);
     })
 
-    const removeUsersFromGroup = () => {
+    const removeUserFromAllGroups = () => {
         users = [];
         groupUsers = groupUsers.map((group) => {
             const isUser = group.users.some((user) => user.id === socket.decoded.userid);
