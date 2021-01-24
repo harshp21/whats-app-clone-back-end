@@ -10,7 +10,7 @@ const router: Router = express.Router();
 router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         // fetch all the available groups
-        const groups = await Group.find();
+        const groups: Array<IGroup> = await Group.find();
         if (groups.length > 0) {
             res.json({
                 message: 'Entered group successfully',
@@ -29,7 +29,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 router.get('/group-messages/:groupId', authenticate, async (req: Request, res: Response) => {
     try {
         // find the group by group id 
-        let group = await Group.findOne({ _id: mongoose.Types.ObjectId(req.params.groupId) });
+        let group: IGroup = await Group.findOne({ _id: mongoose.Types.ObjectId(req.params.groupId) });
 
         // fetch the messages for the group
         let messsageIds = group.messageIds.map(messageId => mongoose.Types.ObjectId(messageId));
@@ -59,11 +59,11 @@ router.get('/group-messages/:groupId', authenticate, async (req: Request, res: R
 router.post('/group', authenticate, async (req: Request, res: Response) => {
     try {
         // Create a new group
-        const group = new Group({
+        const group: IGroup = new Group({
             groupName: req.body.groupName,
             messageIds: [],
         })
-        let createdGroup = await group.save();
+        let createdGroup: IGroup = await group.save();
         res.json({
             message: 'Group created Successfully',
             data: {

@@ -1,5 +1,5 @@
 // importing
-import express, { Request, Response, Router, Next } from 'express';
+import express, { Request, Response, Router } from 'express';
 import { User, IUser } from '../../models/users/users';
 import bycrypt from 'bcrypt';
 import { Validator } from '../../services/validator-service';
