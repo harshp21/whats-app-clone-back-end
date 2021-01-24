@@ -65,9 +65,11 @@ io.use(async (socket, next: Next) => {
         next(new Error('Authentication error'));
     }
 }).on('connection', (socket) => {
+    console.log('connect');
 
     socket.on('joinGroup', (groupId: string) => {
         socket.join(groupId);
+        console.log('group');
 
         socket.to(groupId).on('chat-message', async (msg: string) => {
             try {
@@ -93,6 +95,10 @@ io.use(async (socket, next: Next) => {
             } catch (err) {
                 console.log(err);
             }
+
+            socket.on('disconnect', () => {
+                removeUsersFromGroup();
+            })
         })
 
 
@@ -117,12 +123,24 @@ io.use(async (socket, next: Next) => {
                     users
                 }
                 groupUsers.push(data);
+                console.log('emitted');
                 io.emit('room-users', groupUsers);
             }
         }
     })
 
     socket.on('leaveAllGroup', () => {
+        removeUsersFromGroup();
+        io.emit('room-users', groupUsers);
+
+    })
+
+    socket.on('disconnect', () => {
+        removeUsersFromGroup();
+        io.emit('room-users', groupUsers);
+    })
+
+    const removeUsersFromGroup = () => {
         users = [];
         groupUsers = groupUsers.map((group) => {
             const isUser = group.users.some((user) => user.id === socket.decoded.userid);
@@ -130,7 +148,7 @@ io.use(async (socket, next: Next) => {
             group.users = group.users.filter((user) => user.id !== socket.decoded.userid);
             return group;
         })
-
-    })
+    }
 
 })
+

@@ -100,17 +100,16 @@ io.use(function (socket, next) { return __awaiter(void 0, void 0, void 0, functi
         return [2 /*return*/];
     });
 }); }).on('connection', function (socket) {
-    console.log('connection');
+    console.log('connect');
     socket.on('joinGroup', function (groupId) {
         socket.join(groupId);
-        console.log('join');
+        console.log('group');
         socket.to(groupId).on('chat-message', function (msg) { return __awaiter(void 0, void 0, void 0, function () {
             var chatMessage, message, data, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
-                        console.log(msg);
                         if (!msg) return [3 /*break*/, 3];
                         chatMessage = new chatMessages_1.Message({
                             userId: socket.decoded.userid,
@@ -138,14 +137,14 @@ io.use(function (socket, next) { return __awaiter(void 0, void 0, void 0, functi
                         err_1 = _a.sent();
                         console.log(err_1);
                         return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                    case 5:
+                        socket.on('disconnect', function () {
+                            removeUsersFromGroup();
+                        });
+                        return [2 /*return*/];
                 }
             });
         }); });
-        socket.on('disconnect', function () {
-            console.log(' socket disconnect');
-        });
-        console.log('groupId', groupId);
         if (groupId !== null) {
             var isGroupAvailable = groupUsers.some(function (group) { return group.groupId === groupId; });
             if (isGroupAvailable) {
@@ -168,11 +167,20 @@ io.use(function (socket, next) { return __awaiter(void 0, void 0, void 0, functi
                     users: users
                 };
                 groupUsers.push(data);
+                console.log('emitted');
                 io.emit('room-users', groupUsers);
             }
         }
     });
     socket.on('leaveAllGroup', function () {
+        removeUsersFromGroup();
+        io.emit('room-users', groupUsers);
+    });
+    socket.on('disconnect', function () {
+        removeUsersFromGroup();
+        io.emit('room-users', groupUsers);
+    });
+    var removeUsersFromGroup = function () {
         users = [];
         groupUsers = groupUsers.map(function (group) {
             var isUser = group.users.some(function (user) { return user.id === socket.decoded.userid; });
@@ -180,9 +188,6 @@ io.use(function (socket, next) { return __awaiter(void 0, void 0, void 0, functi
             group.users = group.users.filter(function (user) { return user.id !== socket.decoded.userid; });
             return group;
         });
-    });
-    socket.on('disconnect', function () {
-        console.log('disconnect');
-    });
+    };
 });
 //# sourceMappingURL=app.js.map
