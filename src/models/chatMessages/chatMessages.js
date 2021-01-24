@@ -13,8 +13,13 @@ var whatsAppMessageSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
+    // username to identify which user has sent the message
+    username: {
+        type: String,
+        required: true
+    },
     // message id to identify which message is sent
-    messageId: {
+    message: {
         type: String,
         required: true
     },

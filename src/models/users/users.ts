@@ -32,10 +32,10 @@ const userSchema = new mongoose.Schema({
     },
 
     // store account activation code
-    activationCode: String,
+    accountActivationCode: String,
 
     // store expiry time for account activation code
-    activationCodeExpiry: {
+    accountActivationCodeExpiry: {
         type: Date,
         default: Date.now()
     },
@@ -50,10 +50,7 @@ const userSchema = new mongoose.Schema({
     resetPasswordToken: String,
 
     // store reset password token expiry time
-    resetPasswordTokenExpiry: {
-        type: Date,
-        default: new Date()
-    }
+    resetPasswordTokenExpiry: Number
 })
 
 // Creating an interface for User
@@ -61,11 +58,11 @@ interface IUser extends mongoose.Document {
     email: string;
     username: string;
     password: string;
-    activationCode: string;
-    activationCodeExpiry: Date,
+    accountActivationCode: string;
+    accountActivationCodeExpiry: number,
     isActive: boolean,
     resetPasswordToken: string,
-    resetPasswordTokenExpiry: Date
+    resetPasswordTokenExpiry: number
 }
 
 //Create a model/Collection for user Schema

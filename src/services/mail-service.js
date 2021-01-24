@@ -46,10 +46,11 @@ var MailService = /** @class */ (function () {
     }
     MailService.prototype.sendMail = function (mailSubject, mailBody, mailTo) {
         return __awaiter(this, void 0, void 0, function () {
-            var transporter, info;
+            var transporter, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 2, , 3]);
                         transporter = nodemailer_1.default.createTransport({
                             host: "smtp.gmail.com",
                             port: 587,
@@ -59,6 +60,7 @@ var MailService = /** @class */ (function () {
                                 pass: process.env.NODE_MAILER_PASSWORD,
                             },
                         });
+                        // send mail with defined transport object
                         return [4 /*yield*/, transporter.sendMail({
                                 from: process.env.NODE_MAILER_EMAIL,
                                 to: mailTo,
@@ -66,8 +68,14 @@ var MailService = /** @class */ (function () {
                                 html: mailBody,
                             })];
                     case 1:
-                        info = _a.sent();
-                        return [2 /*return*/];
+                        // send mail with defined transport object
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_1 = _a.sent();
+                        console.log("Error occured while sending mail : ", err_1);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

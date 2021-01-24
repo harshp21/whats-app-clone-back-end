@@ -10,8 +10,14 @@ const whatsAppMessageSchema = new mongoose.Schema({
         required: true
     },
 
+    // username to identify which user has sent the message
+    username: {
+        type: String,
+        required: true
+    },
+
     // message id to identify which message is sent
-    messageId: {
+    message: {
         type: String,
         required: true
     },
@@ -29,8 +35,18 @@ const whatsAppMessageSchema = new mongoose.Schema({
     groupId: String
 })
 
+interface IChatMessage extends mongoose.Document {
+    userId: string;
+    username: string;
+    message: string;
+    timestamp: Date;
+    toUserId: String;
+    groupId: String;
+}
+
+
 //Creating model/ Collection for messages schema
-const Message = mongoose.model('Message', whatsAppMessageSchema);
+const Message = mongoose.model<IChatMessage>('Message', whatsAppMessageSchema);
 
 // exporting model
-export { Message };
+export { Message, IChatMessage };
